@@ -1,0 +1,8 @@
+- name: common tasks
+  hosts: all
+  become: yes
+  roles:
+    - common
+    - kubernetes
+    - post
+
