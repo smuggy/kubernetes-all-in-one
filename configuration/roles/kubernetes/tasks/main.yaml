@@ -32,7 +32,7 @@
   register: kubelet_conf
 
 - name: initialize control plane
-  shell: kubeadm init --config /home/ubuntu/kubeadm-config.yaml    # --pod-network-cidr=10.244.0.0/16
+  shell: kubeadm init --config /home/ubuntu/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/admin.conf
   when: kubelet_conf.stat.exists == false
@@ -43,7 +43,7 @@
     state: directory
     mode: "0755"
 
-- name: Copy admin conf to users directory
+- name: Copy admin conf to root user directory
   copy:
     remote_src: yes
     src: /etc/kubernetes/admin.conf
@@ -52,10 +52,22 @@
     group: "{{ ansible_env.USER }}"
     mode: "0644"
 
-  # - name: remove node taint
-  #  shell: kubectl taint nodes --all node.kubernetes.io/not-ready-
+- name: create .kube directory
+  file:
+    path: "/home/ubuntu/.kube"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: "0755"
+
+- name: Copy admin conf to ubuntu user directory
+  copy:
+    remote_src: yes
+    src: /etc/kubernetes/admin.conf
+    dest: /home/ubuntu/.kube/config
+    owner: ubuntu
+    group: ubuntu
+    mode: "0644"
 
 - name: Apply flannel CNI
   shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
-
-

@@ -23,4 +23,3 @@ This should do the following:
 * initiate cluster with kubeadm command 
 
 The kube config file is put in the root home .kube directory.
-

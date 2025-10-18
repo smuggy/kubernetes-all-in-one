@@ -40,7 +40,3 @@
     mode: "0644"
     owner: ubuntu
     group: ubuntu
-
-  # - name: remove node taint
-  #  shell: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-

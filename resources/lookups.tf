@@ -28,9 +28,3 @@ data aws_ami ubuntu {
     values = ["hvm"]
   }
 }
-
-# data aws_security_group default {
-#   vpc_id  = data.aws_vpc.default.id
-#   name    = "default-open-sg"
-# }
-
