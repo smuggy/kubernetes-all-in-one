@@ -1,9 +1,9 @@
-provider aws {
+provider "aws" {
   region = "us-east-2"
 }
 
-provider tls {
+provider "tls" {
 }
 
-provider local {
+provider "local" {
 }

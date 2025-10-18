@@ -2,42 +2,42 @@ locals {
   key_name = "mm-test-key"
 }
 
-resource aws_security_group this {
+resource "aws_security_group" "this" {
   name   = "kubernetes_sg"
   vpc_id = local.vpc_id
-  tags   = {
+  tags = {
     Name = "kubernetes_node_sg"
   }
 }
 
-resource aws_vpc_security_group_ingress_rule open_inbound {
+resource "aws_vpc_security_group_ingress_rule" "open_inbound" {
   security_group_id = aws_security_group.this.id
 
   cidr_ipv4   = "0.0.0.0/0"
   ip_protocol = -1
   description = "open all ports for inbound access"
-  tags        = {
+  tags = {
     Name = "open-inbound"
   }
 }
 
-resource aws_vpc_security_group_egress_rule open_outbound {
+resource "aws_vpc_security_group_egress_rule" "open_outbound" {
   security_group_id = aws_security_group.this.id
 
   cidr_ipv4   = "0.0.0.0/0"
   ip_protocol = -1
   description = "open all ports for outbound access"
-  tags        = {
+  tags = {
     Name = "open-outbound"
   }
 }
 
-resource aws_instance node {
-  ami           = data.aws_ami.ubuntu.id
-  subnet_id     = local.subnet_id # data.aws_subnet.a.id
-  instance_type = "t3a.medium"
-  key_name      = local.key_name
-  vpc_security_group_ids = [aws_security_group.this.id] 
+resource "aws_instance" "node" {
+  ami                    = data.aws_ami.ubuntu.id
+  subnet_id              = local.subnet_id # data.aws_subnet.a.id
+  instance_type          = "t3a.medium"
+  key_name               = local.key_name
+  vpc_security_group_ids = [aws_security_group.this.id]
 
   tags = {
     Name       = "mm-test-instance"
@@ -47,8 +47,16 @@ resource aws_instance node {
   depends_on = [aws_key_pair.this]
 }
 
-resource local_file ansible_hosts {
+resource "local_file" "ansible_hosts" {
   filename        = "../configuration/hosts"
   file_permission = 0644
-  content = format("%s\n", aws_instance.node.public_ip)
+  content         = format("%s\n", aws_instance.node.public_ip)
 }
+
+# action ansible_playbook this {
+#   config {
+#     playbook_path = "${path.module}/../configuration/server.yaml"
+#     host = aws_instance.node.public_ip
+#     ssh_public_key = aws_key_pair.this.public_key
+#   }
+# }

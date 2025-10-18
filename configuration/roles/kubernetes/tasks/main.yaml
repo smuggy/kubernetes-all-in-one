@@ -70,4 +70,4 @@
     mode: "0644"
 
 - name: Apply flannel CNI
-  shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+  shell: kubectl apply --filename https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml

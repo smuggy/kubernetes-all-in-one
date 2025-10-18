@@ -1,10 +1,8 @@
-data aws_vpc default {
-  tags = {
-    Name = "default-vpc-us-east-2"
-  }
+data "aws_vpc" "default" {
+  default = true
 }
 
-data aws_subnet a {
+data "aws_subnet" "a" {
   vpc_id            = data.aws_vpc.default.id
   availability_zone = "us-east-2a"
 }
@@ -14,13 +12,13 @@ locals {
   subnet_id = data.aws_subnet.a.id
 }
 
-data aws_ami ubuntu {
+data "aws_ami" "ubuntu" {
   most_recent = true
   owners      = ["099720109477"]
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-*-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-*-amd64-server-*"]
   }
 
   filter {

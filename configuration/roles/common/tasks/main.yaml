@@ -30,7 +30,7 @@
     state: present
     update_cache: yes
 
-- name: setup keyring
+- name: setup containerd keyring
   shell: |
     mkdir -p /etc/apt/keyrings
     rm --force /etc/apt/keyrings/docker.gpg
