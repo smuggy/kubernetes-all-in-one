@@ -12,4 +12,4 @@ Resources created include:
 * ec2 instance
   * t3a.medium instance type
   * ubuntu operating system
-* looks up default vpc using tag default-vpc-us-east-2
+* looks up default vpc

@@ -8,8 +8,11 @@ data "aws_subnet" "a" {
 }
 
 locals {
-  vpc_id    = data.aws_vpc.default.id
-  subnet_id = data.aws_subnet.a.id
+  vpc_id     = data.aws_vpc.default.id
+  subnet_id  = data.aws_subnet.a.id
+  user_name  = "ubuntu"
+  public_ip  = aws_instance.node.public_ip
+  private_ip = aws_instance.node.private_ip
 }
 
 data "aws_ami" "ubuntu" {

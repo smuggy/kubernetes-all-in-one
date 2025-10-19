@@ -39,6 +39,21 @@ resource "aws_instance" "node" {
   key_name               = local.key_name
   vpc_security_group_ids = [aws_security_group.this.id]
 
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Waiting for cloud-init to complete...'",
+      "cloud-init status --wait > /dev/null",
+      "echo 'Completed cloud-init!'",
+    ]
+
+    connection {
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.ssh_key.private_key_pem
+    }
+  }
+
   tags = {
     Name       = "mm-test-instance"
     Source     = "local-tf"
@@ -47,16 +62,3 @@ resource "aws_instance" "node" {
   depends_on = [aws_key_pair.this]
 }
 
-resource "local_file" "ansible_hosts" {
-  filename        = "../configuration/hosts"
-  file_permission = 0644
-  content         = format("%s\n", aws_instance.node.public_ip)
-}
-
-# action ansible_playbook this {
-#   config {
-#     playbook_path = "${path.module}/../configuration/server.yaml"
-#     host = aws_instance.node.public_ip
-#     ssh_public_key = aws_key_pair.this.public_key
-#   }
-# }
