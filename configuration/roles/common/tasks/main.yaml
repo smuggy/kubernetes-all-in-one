@@ -15,9 +15,14 @@
     state: present
     reload: yes
 
-- name: Load br_netfilter
+- name: Load module br_netfilter
   modprobe:
     name: br_netfilter
+    state: present
+
+- name: Load module overlay
+  modprobe:
+    name: overlay
     state: present
 
 - name: pre-req containerd packages
